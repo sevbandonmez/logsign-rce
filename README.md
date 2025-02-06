@@ -23,7 +23,7 @@ To use these template with Nuclei, follow the example steps below:
 ### Clone the repository:
 
 ```sh
-git clone https://github.com/j4nk3/Logsign-RCE.git
+git clone https://github.com/sevbandonmez/Logsign-RCE.git
 cd Logsign-RCE
 ```
 ### Usage with Nuclei:
