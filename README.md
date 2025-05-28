@@ -16,6 +16,8 @@ Notice: The API GET request performed in the detection section is closed on some
 
 The metasploit exploit phase will be updated...
 
+Writeup: https://medium.com/@sevbandonmez/zero-day-review-critical-vulnerabilities-in-logsign-unified-secops-platform-versions-6-4-7-69bbec653b3a
+
 ## Usage
 
 To use these template with Nuclei, follow the example steps below:
