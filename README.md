@@ -33,7 +33,7 @@ git clone https://github.com/sevbandonmez/logsign-rce.git
 cd logsign-rce
 ```
 
-## Install the required Python library
+**Install the required Python library:**
 
 ```pip install requests```
 
