@@ -98,5 +98,5 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## References
 [Logsign Support](https://support.logsign.net/hc/en-us/articles/19316621924754-03-06-2024-Version-6-4-8-Release-Notes)<br>
-[Zero Day Inititive](https://www.zerodayinitiative.com/blog/2024/7/1/getting-unauthenticated-remote-code-execution-on-the-logsign-unified-secops-platform)
-[Writeup old version](https://medium.com/@sevbandonmez/zero-day-review-critical-vulnerabilities-in-logsign-unified-secops-platform-versions-6-4-7-69bbec653b3a)
+[Zero Day Inititive](https://www.zerodayinitiative.com/blog/2024/7/1/getting-unauthenticated-remote-code-execution-on-the-logsign-unified-secops-platform)<br>
+[Writeup](https://medium.com/@sevbandonmez/zero-day-review-critical-vulnerabilities-in-logsign-unified-secops-platform-versions-6-4-7-69bbec653b3a)
